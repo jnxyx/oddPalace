@@ -10,13 +10,12 @@
 
         if (global.odd && 'function' === typeof(global.odd)) {
             setInterval(function() {
-            	console.log('1');
                 renderHtml();
             }, 50);
 
             odd = global.odd({
-                length: 3//,
-                // callback: renderHtml
+                length: 3,
+                callback: renderHtml
             });
         }
 
@@ -33,8 +32,8 @@
 
     }
 
-    function renderHtml() {
-        var dataContainer = global.dataContainer;
+    function renderHtml(dataContainer) {
+        var dataContainer = dataContainer || global.dataContainer;
         if (!global.dataContainer.length) {
             return;
         }

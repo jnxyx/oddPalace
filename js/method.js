@@ -25,11 +25,7 @@
         for (var i = 1; i <= Math.pow(defaults.number, 2); i++) {
             defaults.array[i - 1] = i;
         }
-
-
     }
-
-
 
     function renderDataContainer() {
         var n = 0;
@@ -50,6 +46,19 @@
         }
         return rarray;
     }
+
+    function clone2DArray(array) {
+        var rarray = [];
+        for (var i = array.length - 1; i >= 0; i--) {
+            var _rarray = [];
+            for (var j = array[i].length - 1; j >= 0; j--) {
+                _rarray[j] = array[i][j];
+            }
+            rarray.unshift(_rarray);
+        }
+        return rarray;
+    }
+
 
     function judge() {
 
@@ -112,7 +121,9 @@
 
         initDataContainer(this.options.length);
 
-        this.arrange(defaults.array);
+        this.handle();
+
+        // this.arrange(defaults.array);
 
     }
 
@@ -120,7 +131,10 @@
 
         set: function(number) {
             initDataContainer(number);
-            this.arrange(defaults.array);
+
+            this.handle();
+
+            // this.arrange(defaults.array);
         },
 
         resolve: function() {
@@ -147,8 +161,8 @@
                     var self = this;
                     self.options.callback();
                     // setTimeout(function() {
-                    //     self.options.callback();
-                    // }, 500);
+                    //     self.options.callback(cloneArray(dataContainer));
+                    // }, 50);
                 }
 
                 var rjudge = judge();
@@ -173,7 +187,87 @@
                 }
             }
 
+        },
+
+        handle: function() {
+
+            if (defaults.number % 2 === 0) {
+                return;
+            }
+
+            var basics = this.getBasics();
+            var reagan = this.getReagan(basics);
+            dataContainer = global.dataContainer = this.mergeArray(basics, reagan);
+            console.log(this.test());
+        },
+
+        //构造基方
+        getBasics: function() {
+            var rbasics = clone2DArray(dataContainer);
+            for (var i = defaults.number - 1; i >= 0; i--) {
+                for (var j = defaults.number - 1; j >= 0; j--) {
+                    if ((i + j) % 2 === 0) {
+                        rbasics[i][j] = (i + j) / 2 + 1;
+                    } else {
+                        var value = (i + j - defaults.number) / 2 + 1;
+                        rbasics[i][j] = value > 0 ? value : (value + defaults.number);
+                    }
+
+                }
+            }
+
+            return rbasics;
+        },
+
+        //翻转基方
+        turnReagan: function(basics) {
+
+            for (var i = (defaults.number - 1) / 2; i >= 0; i--) {
+                for (var j = defaults.number - 1; j >= 0; j--) {
+                    var exchange = basics[i][j];
+                    basics[i][j] = basics[defaults.number - i - 1][j];
+                    basics[defaults.number - i - 1][j] = exchange;
+                }
+
+            }
+
+            return basics;
+        },
+
+        //构造根方
+        getReagan: function(basics) {
+
+            var reagan = clone2DArray(basics);
+
+            for (var i = defaults.number - 1; i >= 0; i--) {
+
+                for (var j = defaults.number - 1; j >= 0; j--) {
+                    reagan[i][j] = defaults.number * (reagan[i][j] - 1);
+                }
+
+            }
+
+            return this.turnReagan(reagan);
+        },
+
+        mergeArray: function(basics, reagan) {
+            var rmergeArray = clone2DArray(dataContainer);
+            for (var i = defaults.number - 1; i >= 0; i--) {
+
+                for (var j = defaults.number - 1; j >= 0; j--) {
+                    rmergeArray[i][j] = basics[i][j] + reagan[i][j];
+                }
+
+            }
+
+            return rmergeArray;
+
+        },
+
+        test: function() {
+            return judge();
         }
+
     };
 
 
