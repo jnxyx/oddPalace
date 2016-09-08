@@ -152,6 +152,7 @@
             return;
         },
 
+        // 此方法'有毒'，慎用
         arrange: function(array) {
             //0长度返回
             if (!array.length) {
