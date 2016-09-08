@@ -22,10 +22,20 @@
         global.document.getElementById('oddLevel').onkeydown = function(e) {
 
             if (e.keyCode == 13) {
+
                 var number = parseInt(this.value);
+
                 if (!isNaN(number)) {
+                    if (number % 2 === 0) {
+                        alert('请输入奇数！！！');
+                        return;
+                    }
+
                     odd.set(number);
                     renderHtml();
+                } else {
+                    alert('请输入正整数！！！');
+                    return;
                 }
             }
         };
