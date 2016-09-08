@@ -10,9 +10,14 @@
 
         if (global.odd && 'function' === typeof(global.odd)) {
             setInterval(function() {
+            	console.log('1');
                 renderHtml();
-            }, 500);
-            odd = global.odd(17);
+            }, 50);
+
+            odd = global.odd({
+                length: 3//,
+                // callback: renderHtml
+            });
         }
 
         global.document.getElementById('oddLevel').onkeydown = function(e) {

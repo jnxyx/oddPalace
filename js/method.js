@@ -4,7 +4,9 @@
         dataContainer = global.dataContainer = [],
         defaults = {};
 
-    function initDataContainer() {
+    function initDataContainer(number) {
+
+        defaults.number = number;
 
         dataContainer = global.dataContainer = [];
 
@@ -17,14 +19,36 @@
                 dataContainer.push(item);
             }
         }
-        console.log(dataContainer);
+
+        defaults.array = [];
+
+        for (var i = 1; i <= Math.pow(defaults.number, 2); i++) {
+            defaults.array[i - 1] = i;
+        }
+
 
     }
 
 
 
-    function renderDataContainer(argument) {
+    function renderDataContainer() {
+        var n = 0;
 
+        if (defaults.number) {
+            for (var i = 0; i < defaults.number; i++) {
+                for (var j = 0; j < defaults.number; j++) {
+                    dataContainer[i][j] = defaults.array[n++];
+                }
+            }
+        }
+    }
+
+    function cloneArray(array) {
+        var rarray = [];
+        for (var i = array.length - 1; i >= 0; i--) {
+            rarray[i] = array[i];
+        }
+        return rarray;
     }
 
     function judge() {
@@ -41,6 +65,17 @@
             unslantValue = 0, //逆斜向和值
             slantValue = 0; //斜向和值
 
+        //斜向和值判断
+        for (i = 0; i < defaults.number; i++) {
+            //斜向赋值
+            slantValue += dataContainer[i][i];
+
+            //逆斜向赋值
+            unslantValue += dataContainer[i][defaults.number - i - 1];
+        }
+
+
+
         //横向、竖向判断
         for (i = 0; i < defaults.number; i++) {
 
@@ -48,22 +83,14 @@
                 //横向、竖向赋值
                 landscapeValue += dataContainer[i][j];
                 verticalValue += dataContainer[j][i];
-
-                //斜向赋值
-                if (i === j) {
-                    slantValue += dataContainer[i][j];
-                }
-
-                //逆斜向赋值
-                if ((i + j + 1) === defaults.number) {
-                    unslantValue += dataContainer[i][j];
-                }
-
             }
 
             if (landscapeValue !== value || verticalValue !== value) {
                 return false;
             }
+
+            landscapeValue = 0;
+            verticalValue = 0;
 
         }
 
@@ -81,20 +108,71 @@
             return new odd(options);
         }
 
-        defaults.number = options;
+        this.options = options;
 
-        initDataContainer();
+        initDataContainer(this.options.length);
+
+        this.arrange(defaults.array);
+
     }
 
     odd.prototype = {
 
         set: function(number) {
-            defaults.number = number;
-            initDataContainer();
+            initDataContainer(number);
+            this.arrange(defaults.array);
         },
 
         resolve: function() {
-        	
+            for (var i = dataContainer.length - 1; i >= 0; i--) {
+                var item = dataContainer[i];
+                for (var j = item.length - 1; j >= 1; j--) {
+                    var exchange = item[j];
+                    item[j] = item[j - 1];
+                    item[j - 1] = exchange;
+                    if (judge()) {
+                        return;
+                    }
+                }
+            }
+            return;
+        },
+
+        arrange: function(array) {
+            //0长度返回
+            if (!array.length) {
+                renderDataContainer();
+
+                if (this.options.callback) {
+                    var self = this;
+                    self.options.callback();
+                    // setTimeout(function() {
+                    //     self.options.callback();
+                    // }, 500);
+                }
+
+                var rjudge = judge();
+                return rjudge;
+
+            }
+
+            var rarray = cloneArray(array);
+
+            for (var i = 0; i < rarray.length; i++) {
+
+                defaults.array[defaults.array.length - rarray.length] = rarray[i];
+
+                var nextArray = cloneArray(rarray);
+
+                nextArray.splice(i, 1);
+
+                var results = this.arrange(nextArray);
+                if (results) {
+
+                    return true;
+                }
+            }
+
         }
     };
 
