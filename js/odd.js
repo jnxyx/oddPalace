@@ -9,9 +9,6 @@
         var odd;
 
         if (global.odd && 'function' === typeof(global.odd)) {
-            setInterval(function() {
-                renderHtml();
-            }, 50);
 
             odd = global.odd({
                 length: 3,

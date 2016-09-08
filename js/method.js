@@ -200,6 +200,9 @@
             var reagan = this.getReagan(basics);
             dataContainer = global.dataContainer = this.mergeArray(basics, reagan);
             console.log(this.test());
+            if (this.options.callback) {
+                this.options.callback();
+            }
         },
 
         //构造基方
