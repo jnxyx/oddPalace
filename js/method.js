@@ -1,15 +1,8 @@
 (function() {
 
     var global = this,
-        dataContainer = [],
+        dataContainer = global.dataContainer = [],
         defaults = {};
-
-    function odd(options) {
-
-        defaults.number = options;
-
-        initDataContainer();
-    }
 
     function initDataContainer() {
 
@@ -29,6 +22,26 @@
     function renderDataContainer(argument) {
 
     }
+
+
+    function odd(options) {
+        if (!(this instanceof(odd))) {
+            return new odd(options);
+        }
+
+        defaults.number = options;
+
+        initDataContainer();
+    }
+
+    odd.prototype = {
+        set: function(number) {
+            defaults.number = number;
+            dataContainer = global.dataContainer = [];
+            initDataContainer();
+        }
+    };
+
 
     global.odd = odd;
 
