@@ -40,13 +40,17 @@
     }
 
     function renderHtml(dataContainer) {
+
         var dataContainer = dataContainer || global.dataContainer;
+
         if (!global.dataContainer.length) {
             return;
         }
 
         var html = '';
+
         for (var i = 0; i < dataContainer.length; i++) {
+
             var item = dataContainer[i];
             var minHtml = '';
             for (var j = 0; j < item.length; j++) {
@@ -54,6 +58,7 @@
             }
             html += '<tr>' + minHtml + '</tr>';
         }
+
         global.document.getElementById('cube').innerHTML = html;
     }
 
