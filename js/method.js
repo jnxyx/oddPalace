@@ -223,7 +223,7 @@
             return rbasics;
         },
 
-        //翻转基方
+        //翻转根方
         turnReagan: function(basics) {
 
             for (var i = (defaults.number - 1) / 2; i >= 0; i--) {
