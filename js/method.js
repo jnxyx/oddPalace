@@ -238,7 +238,7 @@
             return basics;
         },
 
-        //构造根方
+        //构造根方,返回翻转后的根方
         getReagan: function(basics) {
 
             var reagan = clone2DArray(basics);
